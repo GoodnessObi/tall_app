@@ -1,15 +1,24 @@
 <?php
 
 use Livewire\Volt\Component;
+use App\Models\Note;
 
 new class extends Component {
+
+    public function delete($noteId)
+    {
+        $note = Note::where('id', $noteId)->first();
+        $note->delete();
+    }
+
     public function with(): array
     {
         return [
             'notes' => Auth::user()
                 ->notes()
                 ->orderBy('send_date', 'asc')
-                ->get()        ];
+                ->get()
+            ];
     }
 }; ?>
 
@@ -25,14 +34,17 @@ new class extends Component {
         <div class="flex justify-end mb-8">
             <x-button primary icon-right="plus" href="{{route('notes.create')}}" wire:navigate>Create Note</x-button>
         </div>
-        <div class="grid grid-cols-2 gap-2">
+
+        <div class="grid grid-cols-3 gap-2">
             @foreach($notes as $note)
             <x-card wire:key='{{ $note->id }}'>
                 <div class="flex justify-between">
-                    <a href="#">
+                    <a href="#" class="space-y-4">
                         {{ $note->title }}
+
+                        <p class="text-xs">{{ Str::limit($note->body, 50 )}}</p>
                     </a>
-                    <div class="text-xs text-gray-500">
+                    <div class="text-xs text-gray-500 text-nowrap">
                         {{ \Carbon\Carbon::parse($note->send_date)->format('M-d-y') }}
                     </div>
                 </div>
@@ -41,10 +53,10 @@ new class extends Component {
 
                     <div>
                         <x-button.circle icon="eye" />
-                        <x-button.circle icon="trash" />
+                        <x-button.circle icon="trash" wire:click="delete('{{ $note->id }}')" />
                     </div>
-
                 </div>
+
             </x-card>
             @endforeach
         </div>
