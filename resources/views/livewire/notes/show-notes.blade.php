@@ -17,11 +17,14 @@ new class extends Component {
     @if($notes->isEmpty())
         <div class="text-center">
             <p class="text-xl font-bold">No notes yet</p>
-            <p class="text-sm mb-6">Let's create your fitst note to send</p>
+            <p class="mb-6 text-sm">Let's create your fitst note to send</p>
             <x-button primary icon-right="plus" href="{{route('notes.create')}}" wire:navigate>Create Note</x-button>
         </div>
 
     @else
+        <div class="flex justify-end mb-8">
+            <x-button primary icon-right="plus" href="{{route('notes.create')}}" wire:navigate>Create Note</x-button>
+        </div>
         <div class="grid grid-cols-2 gap-2">
             @foreach($notes as $note)
             <x-card wire:key='{{ $note->id }}'>
@@ -40,7 +43,7 @@ new class extends Component {
                         <x-button.circle icon="eye" />
                         <x-button.circle icon="trash" />
                     </div>
-                
+
                 </div>
             </x-card>
             @endforeach
@@ -48,6 +51,6 @@ new class extends Component {
     @endif
 
 
-   
+
 </div>
 
